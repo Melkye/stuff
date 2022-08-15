@@ -1,21 +1,19 @@
 ﻿namespace Merge.Services;
 public class MergeService
 {
-    public  void Merge(int[] nums1, int m, int[] nums2, int n)
+    public void Merge(int[] nums1, int m, int[] nums2, int n)
     {
         int i = 0;
         int j = 0;
         int k = m - 1;
         int p = k;
-        // int temp = int.MinValue;
         while (i < m + n)
         {
-            if (p == i && p < k)
+            if (p <= i && p < k)
                 p++;
-            //temp = nums1[i];
             if (j < n)
             {
-                if (k > m - 1 || i >= m ) // else
+                if (k > m - 1 || i >= m )
                 {
                     if (i > k)
                     {
@@ -24,7 +22,7 @@ public class MergeService
                     }
                     else
                     {
-                        switch (GetMin(nums1[i], nums2[j], nums1[p])) // check border cases
+                        switch (GetMin(nums1[i], nums2[j], nums1[p]))
                         {
                             // case nums1[i]: increment i
                             case int num when num == nums2[j]:
@@ -32,14 +30,15 @@ public class MergeService
                                 nums1[k] = nums1[i];
                                 nums1[i] = nums2[j];
                                 j++;
+                                if (p == m - 1)
+                                {
+                                    p = m;
+                                }
                                 break;
                             case int num when num == nums1[p]:
-                                if (i <= p)
-                                {
                                     int temp = nums1[i];
                                     nums1[i] = nums1[p];
                                     nums1[p] = temp;
-                                }
                                 break;
                         }
                     }
@@ -52,20 +51,23 @@ public class MergeService
                         nums1[k] = nums1[i];
                         nums1[i] = nums2[j];
                         j++;
+                        if (p == m - 1)
+                        {
+                            p = m;
+                        }
                     }
+
                 }
             }
             else
             {
                 if (GetMin(nums1[i], nums1[p]) == nums1[p])
                 {
-                    //if (i < p)
-                    //{
-                        int temp = nums1[i];
-                        nums1[i] = nums1[p];
-                        nums1[p] = temp;
-                    //}
+                    int temp = nums1[i];
+                    nums1[i] = nums1[p];
+                    nums1[p] = temp;
                 }
+                
             }
             i++;
         }
