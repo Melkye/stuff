@@ -1,75 +1,153 @@
 ﻿namespace Merge.Services;
 public class MergeService
 {
+    //public void Merge(int[] nums1, int m, int[] nums2, int n)
+    //{
+    //    int i = 0;
+    //    int j = 0;
+    //    int movedEnd = m - 1;
+    //    int movedAndNotCompared = m - 1;
+
+    //    while (i < m + n)
+    //    {
+    //        if (i >= m && (i > movedAndNotCompared)) // movedAndNotCompared == m - 1 ?
+    //        {
+    //            nums1[i] = nums2[j];
+    //            i++;
+    //            j++;
+    //        }
+    //        else
+    //        {
+    //            if (i < movedAndNotCompared && movedAndNotCompared != m - 1)
+    //            //if (movedEnd != int.MinValue)
+    //            {
+    //                if (j < n)
+    //                {
+    //                    switch (GetMin(nums1[i], nums2[j], nums1[movedAndNotCompared]))
+    //                    {
+    //                        case int num1 when num1 == nums1[i]:
+    //                            i++;
+    //                            break;
+    //                        case int num2 when num2 == nums2[j]:
+    //                            if (GetMin(nums1[i], nums1[movedAndNotCompared]) == nums1[i]) //
+    //                            {
+    //                                int tempo = nums1[i];
+    //                                nums1[i] = nums1[movedAndNotCompared];
+    //                                nums1[movedAndNotCompared] = tempo;
+    //                            }
+    //                            movedEnd++;
+    //                            nums1[movedEnd] = nums1[i];
+    //                            nums1[i] = nums2[j];
+    //                            j++;
+    //                            i++;
+    //                            break;
+    //                        case int moved when moved == nums1[movedAndNotCompared]:
+    //                            int temp = nums1[i];
+    //                            nums1[i] = nums1[movedAndNotCompared];
+    //                            nums1[movedAndNotCompared] = temp;
+    //                            i++;
+    //                            break;
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    if (GetMin(nums1[i], nums1[movedAndNotCompared]) == nums1[movedAndNotCompared])
+    //                    {
+    //                        int temp = nums1[i];
+    //                        nums1[i] = nums1[movedAndNotCompared];
+    //                        nums1[movedAndNotCompared] = temp;
+    //                    }
+    //                    i++;
+    //                }
+    //                if (movedAndNotCompared == i && movedAndNotCompared < movedEnd)
+    //                {
+    //                    movedAndNotCompared++;
+    //                }
+    //            }
+    //            else
+    //            {
+    //                if (j < n && GetMin(nums1[i], nums2[j]) == nums2[j])
+    //                {
+    //                    movedEnd++;
+    //                    movedAndNotCompared++;
+    //                    nums1[movedEnd] = nums1[i];
+    //                    nums1[i] = nums2[j];
+    //                    j++;
+    //                }
+    //                i++;
+    //            }
+    //        }
+    //    }
+
+    //}
     public void Merge(int[] nums1, int m, int[] nums2, int n)
     {
         int i = 0;
         int j = 0;
-        int k = m - 1;
-        int p = k;
+        int movedEnd = m - 1;
+        //int movedAndNotCompared = m - 1;
+
         while (i < m + n)
         {
-            if (p <= i && p < k)
-                p++;
-            if (j < n)
+            if (i >= m && (i > movedEnd)) // movedAndNotCompared == m - 1 ?
             {
-                if (k > m - 1 || i >= m )
+                nums1[i] = nums2[j];
+                i++;
+                j++;
+            }
+            else
+            {
+                if (i < movedEnd && movedEnd != m - 1)
                 {
-                    if (i > k)
+                    if (j < n)
                     {
-                        nums1[i] = nums2[j];
-                        j++;
+                        switch (GetMin(nums1[i], nums2[j], nums1[movedEnd]))
+                        {
+                            case int num1 when num1 == nums1[i]:
+                                i++;
+                                break;
+                            case int num2 when num2 == nums2[j]:
+                                movedEnd++;
+                                nums1[movedEnd] = nums1[i];
+                                nums1[i] = nums2[j];
+                                j++;
+                                i++;
+                                break;
+                            case int moved when moved == nums1[movedEnd]:
+                                int temp = nums1[i];
+                                nums1[i] = nums1[movedEnd];
+                                nums1[movedEnd] = temp;
+                                i++;
+                                break;
+                        }
                     }
                     else
                     {
-                        switch (GetMin(nums1[i], nums2[j], nums1[p]))
+                        if (GetMin(nums1[i], nums1[movedEnd]) == nums1[movedEnd])
                         {
-                            // case nums1[i]: increment i
-                            case int num when num == nums2[j]:
-                                k++;
-                                nums1[k] = nums1[i];
-                                nums1[i] = nums2[j];
-                                j++;
-                                if (p == m - 1)
-                                {
-                                    p = m;
-                                }
-                                break;
-                            case int num when num == nums1[p]:
-                                    int temp = nums1[i];
-                                    nums1[i] = nums1[p];
-                                    nums1[p] = temp;
-                                break;
+                            int temp = nums1[i];
+                            nums1[i] = nums1[movedEnd];
+                            nums1[movedEnd] = temp;
                         }
+                        i++;
                     }
                 }
                 else
                 {
-                    if (GetMin(nums1[i], nums2[j]) == nums2[j])
+                    if (j < n && GetMin(nums1[i], nums2[j]) == nums1[i] || j >= n)
                     {
-                        k++;
-                        nums1[k] = nums1[i];
+                        i++;
+                    }
+                    else if (j < n)
+                    {
+                        movedEnd++;
+                        nums1[movedEnd] = nums1[i];
                         nums1[i] = nums2[j];
                         j++;
-                        if (p == m - 1)
-                        {
-                            p = m;
-                        }
+                        i++;
                     }
-
                 }
             }
-            else
-            {
-                if (GetMin(nums1[i], nums1[p]) == nums1[p])
-                {
-                    int temp = nums1[i];
-                    nums1[i] = nums1[p];
-                    nums1[p] = temp;
-                }
-                
-            }
-            i++;
         }
     }
 
