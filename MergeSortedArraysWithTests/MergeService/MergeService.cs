@@ -85,6 +85,7 @@ public class MergeService
         int i = 0;
         int j = 0;
         int movedEnd = m - 1;
+        int shift = -1;
         //int movedAndNotCompared = m - 1;
 
         while (i < m + n)
@@ -101,35 +102,50 @@ public class MergeService
                 {
                     if (j < n)
                     {
-                        switch (GetMin(nums1[i], nums2[j], nums1[movedEnd]))
+                        switch (GetMin(nums1[i], nums2[j], nums1[movedEnd - shift]))
                         {
                             case int num1 when num1 == nums1[i]:
                                 i++;
                                 break;
                             case int num2 when num2 == nums2[j]:
+                                if (GetMin(nums1[i], nums1[movedEnd - shift]) == nums1[i])
+                                {
+                                    int tempo = nums1[i];
+                                    nums1[i] = nums1[movedEnd - shift];
+                                    nums1[movedEnd - shift] = tempo;
+                                }
                                 movedEnd++;
+                                shift++;
                                 nums1[movedEnd] = nums1[i];
                                 nums1[i] = nums2[j];
                                 j++;
                                 i++;
                                 break;
-                            case int moved when moved == nums1[movedEnd]:
+                            case int moved when moved == nums1[movedEnd - shift]:
                                 int temp = nums1[i];
-                                nums1[i] = nums1[movedEnd];
-                                nums1[movedEnd] = temp;
+                                nums1[i] = nums1[movedEnd - shift];
+                                nums1[movedEnd - shift] = temp;
                                 i++;
                                 break;
                         }
                     }
                     else
                     {
-                        if (GetMin(nums1[i], nums1[movedEnd]) == nums1[movedEnd])
+                        if (GetMin(nums1[i], nums1[movedEnd - shift]) == nums1[i])
+                        {
+                            i++;
+                        }
+                        else
                         {
                             int temp = nums1[i];
-                            nums1[i] = nums1[movedEnd];
-                            nums1[movedEnd] = temp;
+                            nums1[i] = nums1[movedEnd - shift];
+                            nums1[movedEnd - shift] = temp;
+                            i++;
                         }
-                        i++;
+                    }
+                    if (i == movedEnd - shift)
+                    {
+                        shift--;
                     }
                 }
                 else
@@ -141,6 +157,7 @@ public class MergeService
                     else if (j < n)
                     {
                         movedEnd++;
+                        shift++;
                         nums1[movedEnd] = nums1[i];
                         nums1[i] = nums2[j];
                         j++;
